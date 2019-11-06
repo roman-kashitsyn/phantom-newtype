@@ -31,19 +31,19 @@ type UserId = Id<User, u64>;
 
 struct User {
     id: UserId,
-	name: String,
-	balance: Cents,
-	age: Years,
+    name: String,
+    balance: Cents,
+    age: Years,
 }
 
 impl User {
   fn new() -> Self {
       Self {
-	      id: UserId::from(1),
-		  name: "John".to_string(),
-		  balance: Cents::from(1000),
-		  age: Years::from(28),
-	  }
+          id: UserId::from(1),
+          name: "John".to_string(),
+          balance: Cents::from(1000),
+          age: Years::from(28),
+      }
   }
 }
 
@@ -55,7 +55,7 @@ fn load_by_id<EntityType>(id: Id<EntityType, u64>) -> EntityType;
 
   1. Very little boilerplate required to define newtypes.
   1. Reusable semantics provided by archetypes.
-	 Once you get used to, say, amounts and know what they can do, you don't need to spend brainpower to understand other types of amounts in your code.
+     Once you get used to, say, amounts and know what they can do, you don't need to spend brainpower to understand other types of amounts in your code.
   1. No macros messing up your namespace.
 
 ## Implemented traits
@@ -83,7 +83,7 @@ The approach taken by the library has some limitations due to design choices mad
   1. It's impossible to implement additional traits for the types forged using the archetypes provided by `phantom-newtype`.
      Every combination of desired traits requires a new archetype.
   1. It's impossible to customize implementations of traits provided by archetypes.
-	 With `phantom-newtype`, every newtype inherits implementations of its representation (including `Debug` and `Display`).
+     With `phantom-newtype`, every newtype inherits implementations of its representation (including `Debug` and `Display`).
 
 [1]: https://doc.rust-lang.org/rust-by-example/generics/new_types.html#new-type-idiom
 
