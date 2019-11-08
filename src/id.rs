@@ -106,6 +106,19 @@ use std::marker::PhantomData;
 /// assert!(map.get(&id).is_some());
 /// ```
 ///
+/// Ids can be sent between threads if the `Repr` allows it, no
+/// matter which `Entity` is used.
+///
+/// ```
+/// use phantom_newtype::Id;
+///
+/// type Cell = std::cell::RefCell<i64>;
+/// type CellId = Id<Cell, i64>;
+/// const ID: CellId = CellId::new(42);
+///
+/// let id_from_thread = std::thread::spawn(|| &ID).join().unwrap();
+/// assert_eq!(ID, *id_from_thread);
+/// ```
 ///
 /// Ids can be serialized and deserialized with `serde`. Serialized
 /// forms of `Id<Entity, Repr>` and `Repr` are identical.
@@ -122,7 +135,7 @@ use std::marker::PhantomData;
 /// assert_eq!(serde_json::to_string(&user_id).unwrap(), serde_json::to_string(&repr).unwrap());
 /// }
 /// ```
-pub struct Id<Entity, Repr>(Repr, PhantomData<Entity>);
+pub struct Id<Entity, Repr>(Repr, PhantomData<std::sync::Mutex<Entity>>);
 
 impl<Entity, Repr> Id<Entity, Repr> {
     /// `get` returns the underlying representation of the identifier.

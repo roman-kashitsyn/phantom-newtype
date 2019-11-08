@@ -129,7 +129,21 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 ///
 /// assert!(ASTRONOMICAL_UNIT > Distance::from(0));
 /// ```
-pub struct Amount<Unit, Repr>(Repr, PhantomData<Unit>);
+///
+/// Amounts can be sent between threads if the `Repr` allows it, no
+/// matter which `Unit` is used.
+///
+/// ```
+/// use phantom_newtype::Amount;
+///
+/// type Cell = std::cell::RefCell<i64>;
+/// type NumCells = Amount<Cell, i64>;
+/// const N: NumCells = NumCells::new(1);
+///
+/// let n_from_thread = std::thread::spawn(|| &N).join().unwrap();
+/// assert_eq!(N, *n_from_thread);
+/// ```
+pub struct Amount<Unit, Repr>(Repr, PhantomData<std::sync::Mutex<Unit>>);
 
 impl<Unit, Repr: Copy> Amount<Unit, Repr> {
     /// Returns the wrapped value.
