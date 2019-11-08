@@ -12,19 +12,19 @@ Example:
 // Let's call them "archetypes".
 use phantom_newtype::{Amount, Id};
 
-// CentUnit here is just a fresh type that should never be constructed.
+// CentUnit here is just a marker that should never be constructed.
 // It allows us to forge a new type of amounts.
-struct CentUnit;
+enum CentUnit {}
 type Cents = Amount<CentUnit, u64>;
 //                            ^
 //                            Representation used for `Cents`.
 
 // Let's create another type of amounts.
 // phantom-newtype is not a replacement for a powerful units library though.
-struct YearUnit;
+enum YearUnit {}
 type Years = Amount<YearUnit, u64>;
 
-// Any type can be used as a tag, it's not necessary to always define new structs.
+// Any type can be used as a marker, it's not necessary to always define fresh empty types.
 type UserId = Id<User, u64>;
 //                     ^
 //                     Representation used for `Id`.

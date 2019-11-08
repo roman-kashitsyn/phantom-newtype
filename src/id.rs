@@ -42,13 +42,13 @@ use std::marker::PhantomData;
 /// ```
 ///
 /// `Enity` doesn't have to be a struct, any type will do. It's just a
-/// tag that differentiate incompatible ids.
+/// marker that differentiate incompatible ids.
 ///
 /// ```compile_fail
 /// use phantom_newtype::Id;
 ///
-/// struct Recepient {}
-/// struct Message {}
+/// enum Recepient {}
+/// enum Message {}
 ///
 /// type RecepientId = Id<Recepient, u64>;
 /// type MessageId = Id<Message, u64>;
@@ -61,7 +61,7 @@ use std::marker::PhantomData;
 /// ```
 /// use phantom_newtype::Id;
 ///
-/// struct Message {}
+/// enum Message {}
 /// type MessageId = Id<Message, u64>;
 ///
 /// let x = MessageId::from(5);
@@ -128,7 +128,7 @@ use std::marker::PhantomData;
 /// use phantom_newtype::Id;
 /// use serde::{Serialize, Deserialize};
 /// use serde_json;
-/// struct User {}
+/// enum User {}
 ///
 /// let repr: u64 = 10;
 /// let user_id = Id::<User, u64>::from(repr);
@@ -143,7 +143,7 @@ impl<Entity, Repr> Id<Entity, Repr> {
     /// ```
     /// use phantom_newtype::Id;
     ///
-    /// struct User {}
+    /// enum User {}
     /// type UserId = Id<User, u64>;
     ///
     /// assert_eq!(*UserId::from(15).get(), 15);
@@ -158,7 +158,7 @@ impl<Entity, Repr> Id<Entity, Repr> {
     ///
     /// ```
     /// use phantom_newtype::Id;
-    /// struct User {}
+    /// enum User {}
     /// type UserId = Id<User, u64>;
     ///
     /// const ADMIN_ID: UserId = UserId::new(42);
@@ -181,7 +181,7 @@ where
     /// use phantom_newtype::{Id, DisplayerOf};
     /// use std::fmt;
     ///
-    /// struct Message {}
+    /// enum Message {}
     /// type MessageId = Id<Message, [u8; 32]>;
     ///
     /// impl DisplayerOf<MessageId> for Message {

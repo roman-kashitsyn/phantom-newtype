@@ -29,9 +29,9 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// ```compile_fail
 /// use phantom_newtype::Amount;
 ///
-/// // These structs are just tags and have no semantic meaning.
-/// struct Apples {}
-/// struct Oranges {}
+/// // These structs are just markers and have no semantic meaning.
+/// enum Apples {}
+/// enum Oranges {}
 ///
 /// let trois_pommes = Amount::<Apples, u64>::from(3);
 /// let five_oranges = Amount::<Oranges, u64>::from(5);
@@ -45,7 +45,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// ```
 /// use phantom_newtype::Amount;
 ///
-/// struct Apples {}
+/// enum Apples {}
 /// type NumApples = Amount<Apples, u64>;
 ///
 /// assert_eq!(true, NumApples::from(3) < NumApples::from(5));
@@ -63,8 +63,8 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// ```
 /// use phantom_newtype::Amount;
 ///
-/// struct Apples {}
-/// struct Oranges {}
+/// enum Apples {}
+/// enum Oranges {}
 ///
 /// let x = Amount::<Apples, u64>::from(3);
 /// let y = Amount::<Oranges, u64>::from(5);
@@ -80,7 +80,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// ```
 /// use phantom_newtype::Amount;
 ///
-/// struct Apples {}
+/// enum Apples {}
 ///
 /// let x = Amount::<Apples, u64>::from(3);
 /// assert_eq!(x * 3, Amount::<Apples, u64>::from(9));
@@ -94,7 +94,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// ```
 /// use phantom_newtype::Amount;
 ///
-/// struct Meters {}
+/// enum Meters {}
 ///
 /// let ms = Amount::<Meters, u64>::from(10);
 /// assert_eq!(std::mem::size_of_val(&ms), std::mem::size_of::<u64>());
@@ -108,7 +108,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// use phantom_newtype::Amount;
 /// use serde::{Serialize, Deserialize};
 /// use serde_json;
-/// struct Meters {}
+/// enum Meters {}
 ///
 /// let repr: u64 = 10;
 /// let m_10 = Amount::<Meters, u64>::from(repr);
@@ -123,7 +123,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// function:
 /// ```
 /// use phantom_newtype::Amount;
-/// struct Meters {}
+/// enum Meters {}
 /// type Distance = Amount<Meters, u64>;
 /// const ASTRONOMICAL_UNIT: Distance = Distance::new(149_597_870_700);
 ///
@@ -151,7 +151,7 @@ impl<Unit, Repr: Copy> Amount<Unit, Repr> {
     /// ```
     /// use phantom_newtype::Amount;
     ///
-    /// struct Apples {}
+    /// enum Apples {}
     ///
     /// let three_apples = Amount::<Apples, u64>::from(3);
     /// assert_eq!(9, (three_apples * 3).get());
@@ -178,7 +178,7 @@ impl<Unit: Default, Repr: Copy> Amount<Unit, Repr> {
     /// use phantom_newtype::Amount;
     ///
     /// #[derive(Debug, Default)]
-    /// struct Seconds {}
+    /// struct Seconds;
     /// let duration = Amount::<Seconds, u64>::from(5);
     ///
     /// assert_eq!("5 Seconds", format!("{} {:?}", duration, duration.unit()));
@@ -199,7 +199,7 @@ where
     /// use phantom_newtype::{Amount, DisplayerOf};
     /// use std::fmt;
     ///
-    /// struct Cents {}
+    /// struct Cents;
     /// type Money = Amount<Cents, u64>;
     ///
     /// impl DisplayerOf<Money> for Cents {
