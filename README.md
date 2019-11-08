@@ -10,7 +10,7 @@ Example:
 ```rust
 // Amount and Id are "kinds" of newtypes people commonly use.
 // Let's call them "archetypes".
-use phantom_newtype::{Amount, Id};
+use phantom_newtype::{Amount, Id, Instant};
 
 // CentUnit here is just a marker that should never be constructed.
 // It allows us to forge a new type of amounts.
@@ -24,7 +24,14 @@ type Cents = Amount<CentUnit, u64>;
 enum YearUnit {}
 type Years = Amount<YearUnit, u64>;
 
-// Any type can be used as a marker, it's not necessary to always define fresh empty types.
+// Instants express the idea of time with respect to some point of reference.
+// E.g. year of birth is instant but age is amount.
+// Note that it is perfectly fine (and useful in practice) to use the same
+// marker type for both instants and corresponding amounts.
+type YearAD = Instant<YearUnit, u64>;
+
+// Any type can be used as a marker, it's not necessary to always define
+// fresh empty types.
 type UserId = Id<User, u64>;
 //                     ^
 //                     Representation used for `Id`.
@@ -43,6 +50,7 @@ impl User {
           name: "John".to_string(),
           balance: Cents::from(1000),
           age: Years::from(28),
+          member_since: YearAD::from(2016),
       }
   }
 }
@@ -60,21 +68,32 @@ fn load_by_id<EntityType>(id: Id<EntityType, u64>) -> EntityType;
 
 ## Implemented traits
 
-| Trait\Archetype | `Amount<T, Repr>` | `Id<T, Repr>` |
-|-----------------|:-----------------:|:-------------:|
-| `Default`       | ✘                 | ✘             |
-| `Clone`         | ✔                 | ✔             |
-| `Copy`          | ✔                 | ✔             |
-| `Debug`         | ✔                 | ✔             |
-| `Display`       | ✔                 | ✔             |
-| `Eq`            | ✔                 | ✔             |
-| `Ord`           | ✔                 | ✔             |
-| `Hash`          | ✔                 | ✔             |
-| `From<Repr>`    | ✔                 | ✔             |
-| `Add`           | ✔ (amounts)       | ✘             |
-| `Sub`           | ✔ (amounts)       | ✘             |
-| `Mul`           | ✔ (by a scalar)   | ✘             |
-| `Div`           | ✔ (by a scalar)   | ✘             |
+| Trait\Archetype   | `Amount<T, Repr>` | `Id<T, Repr>` | `Instant<T, Repr>` |
+|-------------------|:-----------------:|:-------------:|:------------------:|
+| `Default`         | ✘                 | ✘             | ✘                  |
+| `Clone`           | ✔                 | ✔             | ✔                  |
+| `Copy`            | ✔                 | ✔             | ✔                  |
+| `Debug`           | ✔                 | ✔             | ✔                  |
+| `Display`         | ✔                 | ✔             | ✔                  |
+| `Eq`              | ✔                 | ✔             | ✔                  |
+| `Ord`             | ✔                 | ✔             | ✔                  |
+| `Hash`            | ✔                 | ✔             | ✔                  |
+| `From<Repr>`      | ✔                 | ✔             | ✔                  |
+| `Add<Self>`       | ✔                 | ✘             | ✘                  |
+| `AddAssign<Self>` | ✔                 | ✘             | ✘                  |
+| `Sub<Self>`       | ✔                 | ✘             | ✔                  |
+| `SubAssign<Self>` | ✔                 | ✘             | ✘                  |
+| `Mul<Repr>`       | ✔                 | ✘             | ✔                  |
+| `MulAssign<Repr>` | ✔                 | ✘             | ✔                  |
+| `Div<Self>`       | ✔                 | ✘             | ✔                  |
+
+## Instants/Amounts arithmetics
+
+| Operation                             | Output type                            |
+|---------------------------------------|----------------------------------------|
+| `Instant<T, Repr> - Instant<T, Repr>` | `Amount<Unit, <Repr as Sub>::Output>`  |
+| `Instant<T, Repr> - Amount<T, Repr>`  | `Instant<Unit, <Repr as Sub>::Output>` |
+| `Instant<T, Repr> + Amount<T, Repr>`  | `Instant<Unit, Repr>`                  |
 
 ## Limitations
 

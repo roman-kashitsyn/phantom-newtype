@@ -15,7 +15,9 @@
 mod amount;
 mod displayer;
 mod id;
+mod instant;
 
 pub use amount::Amount;
 pub use displayer::{DisplayProxy, DisplayerOf};
 pub use id::Id;
+pub use instant::Instant;
