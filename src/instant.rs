@@ -249,31 +249,34 @@ impl<Unit, Repr: Hash> Hash for Instant<Unit, Repr> {
     }
 }
 
-impl<Unit, Repr> Add<Amount<Unit, Repr>> for Instant<Unit, Repr>
+impl<Unit, Repr, Repr2> Add<Amount<Unit, Repr2>> for Instant<Unit, Repr>
 where
-    Repr: AddAssign + Copy,
+    Repr: AddAssign<Repr2> + Copy,
+    Repr2: Copy,
 {
     type Output = Self;
-    fn add(mut self, rhs: Amount<Unit, Repr>) -> Self {
+    fn add(mut self, rhs: Amount<Unit, Repr2>) -> Self {
         self.add_assign(rhs);
         self
     }
 }
 
-impl<Unit, Repr> AddAssign<Amount<Unit, Repr>> for Instant<Unit, Repr>
+impl<Unit, Repr, Repr2> AddAssign<Amount<Unit, Repr2>> for Instant<Unit, Repr>
 where
-    Repr: AddAssign + Copy,
+    Repr: AddAssign<Repr2> + Copy,
+    Repr2: Copy,
 {
-    fn add_assign(&mut self, rhs: Amount<Unit, Repr>) {
+    fn add_assign(&mut self, rhs: Amount<Unit, Repr2>) {
         self.0 += rhs.get()
     }
 }
 
-impl<Unit, Repr> SubAssign<Amount<Unit, Repr>> for Instant<Unit, Repr>
+impl<Unit, Repr, Repr2> SubAssign<Amount<Unit, Repr2>> for Instant<Unit, Repr>
 where
-    Repr: SubAssign + Copy,
+    Repr: SubAssign<Repr2> + Copy,
+    Repr2: Copy,
 {
-    fn sub_assign(&mut self, rhs: Amount<Unit, Repr>) {
+    fn sub_assign(&mut self, rhs: Amount<Unit, Repr2>) {
         self.0 -= rhs.get()
     }
 }
@@ -289,13 +292,14 @@ where
     }
 }
 
-impl<Unit, Repr> Sub<Amount<Unit, Repr>> for Instant<Unit, Repr>
+impl<Unit, Repr, Repr2> Sub<Amount<Unit, Repr2>> for Instant<Unit, Repr>
 where
-    Repr: SubAssign + Copy,
+    Repr: SubAssign<Repr2> + Copy,
+    Repr2: Copy,
 {
     type Output = Self;
 
-    fn sub(mut self, rhs: Amount<Unit, Repr>) -> Self {
+    fn sub(mut self, rhs: Amount<Unit, Repr2>) -> Self {
         self.sub_assign(rhs);
         self
     }
@@ -365,5 +369,28 @@ where
 {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         Repr::deserialize(deserializer).map(Instant::<Unit, Repr>::new)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_complex_instant_arithmetics() {
+        enum Seconds {}
+        enum UTC {}
+
+        type Timestamp = Instant<Seconds, i64>;
+        type TsDiff = Amount<Seconds, i64>;
+        type Date = Instant<UTC, Timestamp>;
+
+        let epoch = Date::new(Timestamp::new(0));
+        let date = Date::new(Timestamp::new(123456789));
+        let span = Amount::<UTC, TsDiff>::new(TsDiff::from(123456789));
+
+        assert_eq!(date - epoch, span);
+        assert_eq!(date - span, epoch);
+        assert_eq!(epoch + span, date);
     }
 }

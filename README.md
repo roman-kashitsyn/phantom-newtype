@@ -89,11 +89,11 @@ fn load_by_id<EntityType>(id: Id<EntityType, u64>) -> EntityType;
 
 ## Instants/Amounts arithmetics
 
-| Operation                             | Output type                            |
-|---------------------------------------|----------------------------------------|
-| `Instant<T, Repr> - Instant<T, Repr>` | `Amount<Unit, <Repr as Sub>::Output>`  |
-| `Instant<T, Repr> - Amount<T, Repr>`  | `Instant<Unit, <Repr as Sub>::Output>` |
-| `Instant<T, Repr> + Amount<T, Repr>`  | `Instant<Unit, Repr>`                  |
+| Operation                       | Output type                             |
+|---------------------------------|-----------------------------------------|
+| `Instant<T, R> - Instant<T, R>` | `Amount<Unit, <R as Sub>::Output>`      |
+| `Instant<T, R> - Amount<T, R2>` | `Instant<Unit, <R as Sub<R2>>::Output>` |
+| `Instant<T, R> + Amount<T, R2>` | `Instant<Unit, <R as Add<R2>>::Output>` |
 
 ## Limitations
 
