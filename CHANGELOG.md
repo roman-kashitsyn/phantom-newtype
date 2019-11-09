@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][1], and this project adheres to [Semantic Versioning][2].
 
-## [Unreleased]
+## [0.2.0] 2019-11-09
 ### Added
- - `Instant` archetype supporting basic instant/amount arithmetics.
+ - `Instant` archetype supporting instant/amount arithmetics.
 
 ### Fixed
  - Newtypes implement Sync even if the markers does not implement it.

@@ -1,7 +1,7 @@
 [package]
 name = "phantom_newtype"
 description = "Lightweight newtypes without macros."
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Roman Kashitsyn <roman.kashitsyn@gmail.com>"]
 repository = "https://github.com/roman-kashitsyn/phantom-newtype"
 
