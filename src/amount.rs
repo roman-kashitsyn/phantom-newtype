@@ -143,6 +143,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// let n_from_thread = std::thread::spawn(|| &N).join().unwrap();
 /// assert_eq!(N, *n_from_thread);
 /// ```
+#[repr(transparent)]
 pub struct Amount<Unit, Repr>(Repr, PhantomData<std::sync::Mutex<Unit>>);
 
 impl<Unit, Repr: Copy> Amount<Unit, Repr> {

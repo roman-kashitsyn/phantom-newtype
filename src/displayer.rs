@@ -28,6 +28,7 @@ pub trait DisplayerOf<T> {
 
 /// An object `DisplayProxy`, when is asked to display itself,
 /// displays `T` using the specified `Displayer` instead.
+#[repr(transparent)]
 pub struct DisplayProxy<'a, T, Displayer>
 where
     Displayer: DisplayerOf<T>,
