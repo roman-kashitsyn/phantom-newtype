@@ -135,6 +135,7 @@ use std::marker::PhantomData;
 /// assert_eq!(serde_json::to_string(&user_id).unwrap(), serde_json::to_string(&repr).unwrap());
 /// }
 /// ```
+#[repr(transparent)]
 pub struct Id<Entity, Repr>(Repr, PhantomData<std::sync::Mutex<Entity>>);
 
 impl<Entity, Repr> Id<Entity, Repr> {

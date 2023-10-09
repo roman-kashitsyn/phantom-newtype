@@ -137,6 +137,7 @@ use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Sub, SubAssign};
 /// let instant_from_thread = std::thread::spawn(|| &I).join().unwrap();
 /// assert_eq!(I, *instant_from_thread);
 /// ```
+#[repr(transparent)]
 pub struct Instant<Unit, Repr>(Repr, PhantomData<std::sync::Mutex<Unit>>);
 
 impl<Unit, Repr: Copy> Instant<Unit, Repr> {
